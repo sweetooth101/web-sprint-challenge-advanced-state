@@ -23,7 +23,6 @@ export  function Quiz(props) {
     <div id="wrapper" key="quizWrapper">
     { quiz ? <h2 key="quizQuestion">{quiz.question}</h2> : <></>}
       {
-        // quiz already in state? Let's use that, otherwise render "Loading next quiz..."
         quiz ? (
           quiz.answers.map(answer => {
             return (

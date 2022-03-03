@@ -1,16 +1,15 @@
 import axios from "axios"
 import * as types from "./action-types"
 
-// ❗ You don't need to add extra action creators to achieve MVP
-export function moveClockwise() {
+export function moveClockwise() { 
   return ({ type: types.MOVE_CLOCKWISE })
- }
+}
 
 export function moveCounterClockwise() { 
-  return ({ type: types.MOVE_COUNTERCLOCKWISE})
- }
+  return ({ type: types.MOVE_COUNTERCLOCKWISE })
+}
 
- export function selectAnswer(id) {
+export function selectAnswer(id) {
   return ({ type: types.SET_SELECTED_ANSWER, payload: id })
  }
 
@@ -25,9 +24,13 @@ export function setQuiz(quiz) {
       {answer_id: quiz.answers[1].answer_id, text: quiz.answers[1].text}] } })
  }
 
-export function inputChange() { }
+export function inputChange(value, inputId) {
+return ({ type: types.INPUT_CHANGE, payload: { [inputId]: inputId, value: value }})
+ }
 
-export function resetForm() { }
+export function resetForm() { 
+  return ({ type: types.RESET_FORM })
+}
 
 // ❗ Async action creators
 export function fetchQuiz() {
@@ -45,10 +48,6 @@ export function fetchQuiz() {
 
 export function postAnswer(quiz_id, answer_id) {
   return function (dispatch) {
-    // On successful POST:
-    // - Dispatch an action to reset the selected answer state
-    // - Dispatch an action to set the server message to state
-    // - Dispatch the fetching of the next quiz
     dispatch({ type:types.SET_SELECTED_ANSWER, payload: null})
 
     axios.post('http://localhost:9000/api/quiz/answer', { quiz_id, answer_id })
@@ -67,14 +66,11 @@ export function postQuiz(form) {
     axios.post('http://localhost:9000/api/quiz/new', {question_text: form.newQuestion, true_answer_text: form.newTrueAnswer, false_answer_text: form.newFalseAnswer})
     .then(res => {
       dispatch({ type: types.SET_INFO_MESSAGE, payload: {message: res.statusText}})
-      console.log(res.statusText)
+      dispatch(resetForm())
     })
     .catch(err => {
       debugger
     })
-    // On successful POST:
-    // - Dispatch the correct message to the the appropriate state
-    // - Dispatch the resetting of the form
   }
 }
-// ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
+
